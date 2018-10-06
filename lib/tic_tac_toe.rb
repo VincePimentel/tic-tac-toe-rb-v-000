@@ -45,3 +45,46 @@ def turn(board)
   end
 end
 
+def turn_count(board)
+  board.count{|x| x == "X" || x == "O"}
+end
+
+def current_player(board)
+  turn_count(board).even? ? "X" : "O"
+end
+
+def won?(board)
+  WIN_COMBINATIONS.each do |combo|
+    if board[combo[0]] == board[combo[1]] && board[combo[0]] == board[combo[2]] && position_taken?(board, combo[0])
+      return combo
+    end
+  end
+  return false
+end
+
+def full?(board)
+  !board.any? { |x| x == " " }
+end
+
+def draw?(board)
+  !won?(board) && full?(board) ? true : false
+end
+
+def over?(board)
+  won?(board) || full?(board) || draw?(board) ? true : false
+end
+
+def winner(board)
+  !won?(board) ? nil : board[won?(board)[0]] == "X" ? "X" : "O"
+end
+
+def play(board)
+  until over?(board) == true
+    turn(board)
+  end
+  if draw?(board) == true
+    puts "Cat's Game!"
+  elsif won?(board)
+    puts "Congratulations #{winner(board)}!"
+  end
+end
